@@ -119,7 +119,8 @@ def createNewExpense(budget):
         except:
             successMsg = "\n\tEntered an incorrect number value!\n"
     printBudget(budget, successMsg)
-
+def delExpense():
+    clear()
 def printBudget(data, passedMsg = ""):
     printHeader(passedMsg)
     print("==========\n")
