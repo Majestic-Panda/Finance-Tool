@@ -23,7 +23,7 @@ def addExpense(category, budget):
 while True:
     budget = openBudget()
 
-    stdin = versionless_input("Enter a command: ") #uses a function that checks py version to call the built-in input function
+    stdin = versionless_input(">> ") #uses a function that checks py version to call the built-in input function
     
     if stdin == "exit" or stdin == "e":
         print("Goodbye")
@@ -31,10 +31,12 @@ while True:
         break
     elif stdin == "save":
         writeBudget(budget_raw)
-    elif stdin == '-alt -p' or stdin == "alt -a":
+    elif stdin == 'alt -p' or stdin == "alt -a":
         alterExpense(budget, stdin)
     elif stdin == "add":
         createNewExpense(budget)
+    elif stdin == "del":
+        delExpense(budget)
     elif stdin == "print":
         printBudget(budget)
     elif stdin == "-v":
