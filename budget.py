@@ -122,7 +122,8 @@ def printBudget(data, passedMsg = ""):
       for item in tmp_expense:
         expense = "\t"+item
                 #mp_expense[item][x]) is the list associated with a given dict key.
-        print('{:<10s}{:>15.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1]))            
+        diff = tmp_expense[item][0] - tmp_expense[item][1] 
+        print('{:<10s}{:>15.2f}{:>10.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1], diff))            
       i += 1 
   print("\n")
     
