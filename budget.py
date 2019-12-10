@@ -107,12 +107,19 @@ def createNewExpense(budget):
     if chosenCategory != "":
         addedExpense = []
         addedExpense.append(versionless_input("Enter the name of the expense to be created in "+chosenCategory+": "))
-        addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": ")) 
-        addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): ")) 
-
-        ##budget[chosenCategory].append({addedExpense[0],[float(addedExpense[1]), float(addedExpense[2])]})
+        
+        try:
+            addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": $")) 
+            addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): $")) 
+            
+            budget[chosenCategory].append({addedExpense[0]: [float(addedExpense[1]),float(addedExpense[2])] })
+            successMsg = "\n\tItem successfully added!\n"
+            writeBudget(budget)
+            
+        except:
+            successMsg = "\n\tEntered an incorrect number value!\n"
     printBudget(budget, successMsg)
-    
+
 def printBudget(data, passedMsg = ""):
     printHeader(passedMsg)
     print("==========\n")
