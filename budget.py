@@ -90,7 +90,6 @@ def createNewExpense(budget):
   printBudget(budget)
     
   chosenCategory = ""
-  list_of_chosenCategory = []
   successMsg = ""
     
   stdin = versionless_input("Enter the category of this new expense: ")
@@ -116,14 +115,33 @@ def createNewExpense(budget):
     except:
       successMsg = "\n\tEntered an incorrect number value!\n"
   printBudget(budget, successMsg)
-def delExpense():
+def delExpense(budget):
   clear()
   printBudget(budget)
+  successMsg = ""
   
-  
+  stdin = versionless_input("Enter which expense you'd like to delete: ")
+  for Category in budget:
+    list_of_expenses = budget[Category]
+    i=0
+            
+    while i < len(list_of_expenses):    #iterates down the list of expenses
+      tmp_expense = list_of_expenses[i]
+                  
+      for item in tmp_expense:
+        if item.lower() == stdin.lower():
+          stdin = versionless_input("Are you sure you want to delete "+item+" from "+Category+"? (y/n): ")
+          if stdin == "y" or stdin == "yes":
+            index = {item: tmp_expense[item]}
+            budget[Category].remove(index)
+            writeBudget(budget)
+            
+            successMsg = "\n\tItem successfully removed!\n"
+      i+=1   
+  printBudget(budget, successMsg)
 def printBudget(data, passedMsg = ""):
   printHeader(passedMsg)
-  print("==========\n")
+
   for Category in data: #each category (Income, Personal, etc.)
     print(Category+":\n\t")
     list_of_expenses = data[Category] #holds the list of expenses for a given category
@@ -138,9 +156,9 @@ def printBudget(data, passedMsg = ""):
                 #mp_expense[item][x]) is the list associated with a given dict key.
         print('{:<10s}{:>15.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1]))            
       i += 1 
-        
+  print("\n")
     
-    print("\n==========")
+   
 def printHeader(passedMsg):
   clear()
   print("\n======  Cristian's Finance Keeper v0.015 ======\n")
@@ -151,10 +169,4 @@ def printHeader(passedMsg):
     
   if passedMsg != "":
     print(passedMsg)
-    
-        
-        
-        
-        
-	
-
+  print("\t---------------------------------\n")
