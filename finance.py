@@ -31,11 +31,11 @@ while True:
         break
     elif stdin == "save":
         writeBudget(budget_raw)
-    elif stdin == '-ap' or stdin == "-aa":
+    elif stdin == '-alt -p' or stdin == "alt -a":
         alterExpense(budget, stdin)
-    elif stdin == "-add":
+    elif stdin == "add":
         createNewExpense(budget)
-    elif stdin == "-p":
+    elif stdin == "print":
         printBudget(budget)
     elif stdin == "-v":
         fetchPythonVersion("list")

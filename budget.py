@@ -109,7 +109,7 @@ def createNewExpense(budget):
         addedExpense.append(versionless_input("Enter the name of the expense to be created in "+chosenCategory+": "))
         addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": ")) 
         addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): ")) 
-        
+        #EDIT THIS
         ##budget[chosenCategory].append({addedExpense[0],[float(addedExpense[1]), float(addedExpense[2])]})
     printBudget(budget, successMsg)
     
