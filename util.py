@@ -1,3 +1,4 @@
+import sys
 from os import system, name
 from datetime import datetime
 

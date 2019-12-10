@@ -1,5 +1,6 @@
 import json, sys
 from budget import *
+from util import *
 from datetime import datetime
 
 budget = {}
