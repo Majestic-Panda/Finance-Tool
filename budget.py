@@ -154,7 +154,15 @@ def printBudget(data, passedMsg = ""):
       i += 1 
   print("\n")
     
-   
+def calcExpense(budget, string):
+    clear()
+    printBudget(budget)
+    successMsg=""
+    
+    
+    stdin = versionless_input("B:")
+    
+    
 def printHeader(passedMsg):
   clear()
   print("\n======  Cristian's Finance Keeper v0.015 ======\n")
@@ -166,3 +174,4 @@ def printHeader(passedMsg):
   if passedMsg != "":
     print(passedMsg)
   print("\t---------------------------------\n")
+  

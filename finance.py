@@ -23,8 +23,14 @@ def addExpense(category, budget):
     writeBudget(budget)
 while True:
     budget = openBudget()
-
+    stdinArray = []
+    
     stdin = versionless_input(">> ") #uses a function that checks py version to call the built-in input function
+    if stdin:
+      stdinArray[0] = ""
+    else:
+      stdinArray = stdin.split()
+    
     
     if stdin == "exit" or stdin == "e":
         print("Goodbye")
@@ -46,6 +52,10 @@ while True:
         printBudget(budget)
     elif stdin == "-v":
         fetchPythonVersion("list")
+    #elif stdinArray[0] == "calc":
+        #calcExpense(budget, stdin)
+    elif not stdin:
+        continue
         
 	
 closePy()
