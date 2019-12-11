@@ -107,6 +107,33 @@ def delExpense(budget):
             successMsg = "\n\tItem successfully removed!\n"
       i+=1   
   printBudget(budget, successMsg)
+def addCategory(budget):
+  clear()
+  printBudget(budget)
+  successMsg = ""
+  
+  stdin = versionless_input("Enter the name of the new Category to add: ")
+  
+  budget[stdin] = []
+  writeBudget(budget)
+  
+  printBudget(budget)
+def delCategory(budget):
+  clear()
+  printBudget(budget)
+  successMsg = ""
+  
+  stdin = versionless_input("Enter the category you'd like to delete: ")
+  
+  for Category in budget:
+    if stdin.lower() == Category.lower():
+      stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
+      if stdin == "y" or stdin == "yes":
+        del budget[Category]
+        writeBudget(budget)
+        break
+      
+  printBudget(budget)
 def printBudget(data, passedMsg = ""):
   printHeader(passedMsg)
 
