@@ -36,8 +36,12 @@ while True:
         alterExpense(budget, stdin)
     elif stdin == "add":
         createNewExpense(budget)
+    elif stdin == "add -c":
+        addCategory(budget)
     elif stdin == "del":
         delExpense(budget)
+    elif stdin == "del -c":
+        delCategory(budget)
     elif stdin == "print":
         printBudget(budget)
     elif stdin == "-v":
