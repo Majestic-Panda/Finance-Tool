@@ -83,30 +83,6 @@ def createNewExpense(budget):
     except:
       successMsg = "\n\tEntered an incorrect number value!\n"
   printBudget(budget, successMsg)
-def delExpense(budget):
-  clear()
-  printBudget(budget)
-  successMsg = ""
-  
-  stdin = versionless_input("Enter which expense you'd like to delete: ")
-  for Category in budget:
-    list_of_expenses = budget[Category]
-    i=0
-            
-    while i < len(list_of_expenses):    #iterates down the list of expenses
-      tmp_expense = list_of_expenses[i]
-                  
-      for item in tmp_expense:
-        if item.lower() == stdin.lower():
-          stdin = versionless_input("Are you sure you want to delete "+item+" from "+Category+"? (y/n): ")
-          if stdin == "y" or stdin == "yes":
-            index = {item: tmp_expense[item]}
-            budget[Category].remove(index)
-            writeBudget(budget)
-            
-            successMsg = "\n\tItem successfully removed!\n"
-      i+=1   
-  printBudget(budget, successMsg)
 def addCategory(budget):
   clear()
   printBudget(budget)
@@ -117,22 +93,6 @@ def addCategory(budget):
   budget[stdin] = []
   writeBudget(budget)
   
-  printBudget(budget)
-def delCategory(budget):
-  clear()
-  printBudget(budget)
-  successMsg = ""
-  
-  stdin = versionless_input("Enter the category you'd like to delete: ")
-  
-  for Category in budget:
-    if stdin.lower() == Category.lower():
-      stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
-      if stdin == "y" or stdin == "yes":
-        del budget[Category]
-        writeBudget(budget)
-        break
-      
   printBudget(budget)
 def printBudget(data, passedMsg = ""):
   printHeader(passedMsg)
@@ -174,4 +134,106 @@ def printHeader(passedMsg):
   if passedMsg != "":
     print(passedMsg)
   print("\t---------------------------------\n")
+
+#########################################################################
+
+class Budget:
+  def __init__(self, file_stream = "budget.json"):
+    self.budget = self.class_openBudget(file_stream)
+    
+    
+  def class_openBudget(self, file_name):
+    with open(file_name,'r') as json_file:
+      budget_raw = json.loads(json_file.read())
+    return budget_raw
+  def class_printBudget(self, passedMsg = ""):
+    self.class_printHeader(passedMsg)
+    
+    for Category in self.budget: #each category (Income, Personal, etc.)
+      print(Category+":\n\t")
+      list_of_expenses = self.budget[Category] #holds the list of expenses for a given category
+          
+      i=0
+      while i < len(list_of_expenses):    #iterates down the list of expenses
+              #Each list item is a dict containing the name of the expense & a list of $ values.
+        tmp_expense = list_of_expenses[i]
+              
+        for item in tmp_expense:
+          expense = "\t"+item
+                  #mp_expense[item][x]) is the list associated with a given dict key.
+          diff = tmp_expense[item][0] - tmp_expense[item][1] 
+          print('{:<10s}{:>15.2f}{:>10.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1], diff))            
+        i += 1 
+    print("\n")    
+  def class_printHeader(self, passedMsg = ""):
+    clear()
+    print("\n======  Cristian's Finance Keeper v0.015 ======\n")
+    print("\t My Personal Budgeting Program")
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print("\t Current Time: " + current_time)
+      
+    self.printMessage(passedMsg)
   
+  def printMessage(self, passedMsg = ""):
+    if passedMsg != "":
+      print(passedMsg)
+    print("\t---------------------------------\n")  
+    
+  def delItem(self, args):
+    """
+    Deletes an item based on parameters inputted by the user.
+    
+    -del -e: Begins the functions to delete an expense based on a chosen category.
+    -del -c: Deletes a chosen category.  NOTE: Removes all expenses under selected category.
+    
+    """
+
+    self.class_printBudget()
+    passedMsg = ""
+      
+    if len(args) < 2:
+      passedMsg = "\n\tError!  Use the following parameters for the 'del' function:\n\t-e: Delete an expense.\n\t-c: Delete a category.\n"
+    elif args[1] == '-c' and len(args) ==2:
+      
+      stdin = versionless_input("Enter the category you'd like to delete: ").strip()
+      if stdin != "":
+        for Category in self.budget:
+          if stdin.lower() == Category.lower():
+            stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
+            if stdin == "y" or stdin == "yes":
+              del self.budget[Category]
+              writeBudget(self.budget)
+              passedMsg = "\n\tItem successfully removed!\n"
+              break
+          
+          else:
+            passedMsg = "\n\t'"+ stdin +"' was not found.\n"
+      
+    elif args[1] == '-e' and len(args) ==2:
+      
+      stdin = versionless_input("Enter which expense you'd like to delete: ").strip()
+      
+      if stdin != "":
+        for Category in self.budget:
+          list_of_expenses = self.budget[Category]
+          i=0
+                  
+          while i < len(list_of_expenses):    #iterates down the list of expenses
+            tmp_expense = list_of_expenses[i]
+                        
+            for item in tmp_expense:
+              if item.lower() == stdin.lower():
+                stdin = versionless_input("Are you sure you want to delete "+item+" from "+Category+"? (y/n): ").strip()
+                if stdin == "y" or stdin == "yes":
+                  index = {item: tmp_expense[item]}
+                  self.budget[Category].remove(index)
+                  writeBudget(self.budget)
+                  
+                  passedMsg = "\n\tItem successfully removed!\n"
+            i+=1
+    elif len(args) > 2:
+      passedMsg =  "\n\tError!  Too many arguments!\n"
+    else:
+      passedMsg = "\n\tError!  Use the following parameters for the 'del' function:\n\t-e: Delete an expense.\n\t-c: Delete a category.\n"
+    self.class_printBudget(passedMsg)  
