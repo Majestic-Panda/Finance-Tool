@@ -6,56 +6,58 @@ from datetime import datetime
 budget = {}
         
 budget_raw = {
-        "Bills":[
-                {"Rent":[365, 0]},
-                {"WiFi":[26, 0]}
-                ],
-        "Personal":[
-                {"Self":[100, 60]},
-                {"Groceries":[150, 57]}
-                ]
+  "Bills":[
+      {"Rent":[365, 0]},
+      {"WiFi":[26, 0]}
+      ],
+  "Personal":[
+      {"Self":[100, 60]},
+      {"Groceries":[150, 57]}
+      ]
 }
 
 printBudget(openBudget())
 
 def addExpense(category, budget):
     
-    writeBudget(budget)
+  writeBudget(budget)
 while True:
-    budget = openBudget()
-    stdinArray = []
+  budget = openBudget()
+  stdinArray = []
     
-    stdin = versionless_input(">> ") #uses a function that checks py version to call the built-in input function
-    if stdin:
-      stdinArray[0] = ""
-    else:
-      stdinArray = stdin.split()
-    
+  stdin = versionless_input(">> ") #uses a function that checks py version to call the built-in input function
+  try:
+    stdinArray = stdin.split()
     
     if stdin == "exit" or stdin == "e":
-        print("Goodbye")
-        
-        break
+      print("Goodbye")
+          
+      break
     elif stdin == "save":
-        writeBudget(budget_raw)
+      writeBudget(budget_raw)
     elif stdin == 'alt -p' or stdin == "alt -a":
-        alterExpense(budget, stdin)
+      alterExpense(budget, stdin)
     elif stdin == "add":
-        createNewExpense(budget)
+      createNewExpense(budget)
     elif stdin == "add -c":
-        addCategory(budget)
+      addCategory(budget)
     elif stdin == "del":
-        delExpense(budget)
+      delExpense(budget)
     elif stdin == "del -c":
-        delCategory(budget)
+      delCategory(budget)
     elif stdin == "print":
-        printBudget(budget)
+      printBudget(budget)
     elif stdin == "-v":
-        fetchPythonVersion("list")
-    #elif stdinArray[0] == "calc":
-        #calcExpense(budget, stdin)
+      fetchPythonVersion("list")
+    elif stdinArray[0] == "test":
+      calcExpense(budget, stdin)
     elif not stdin:
-        continue
+      continue
+  except:
+    stdinArray.append("")
+    
+  
+  
         
 	
 closePy()
