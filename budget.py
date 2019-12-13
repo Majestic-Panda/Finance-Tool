@@ -53,45 +53,6 @@ def alterExpense(budget, cmd):
         i += 1 
     
     printBudget(budget, successMsg)
-def createNewExpense(budget):
-  clear() 
-  printBudget(budget)
-    
-  chosenCategory = ""
-  successMsg = ""
-    
-  stdin = versionless_input("Enter the category of this new expense: ")
-  print("")
-    
-  for Category in budget:
-    if Category.lower() == stdin.lower():
-      chosenCategory = Category
-      break
-            
-  if chosenCategory != "":
-    addedExpense = []
-    addedExpense.append(versionless_input("Enter the name of the expense to be created in "+chosenCategory+": "))
-        
-    try:
-      addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": $")) 
-      addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): $")) 
-            
-      budget[chosenCategory].append({addedExpense[0]: [float(addedExpense[1]),float(addedExpense[2])] })
-      successMsg = "\n\tItem successfully added!\n"
-      writeBudget(budget)
-            
-    except:
-      successMsg = "\n\tEntered an incorrect number value!\n"
-  printBudget(budget, successMsg)
-def addCategory(budget):
-  clear()
-  printBudget(budget)
-  successMsg = ""
-  
-  stdin = versionless_input("Enter the name of the new Category to add: ")
-  
-  budget[stdin] = []
-  writeBudget(budget)
   
   printBudget(budget)
 def printBudget(data, passedMsg = ""):
@@ -179,6 +140,15 @@ class Budget:
     if passedMsg != "":
       print(passedMsg)
     print("\t---------------------------------\n")  
+    
+  def alter_Item():
+    """
+    Edits the values of a given expense or Category.
+    
+    -Functions to be added as the function is written.  
+    
+    """
+  
   def add_Item(self, args):
     """
     Adds an item based on parameters inputted by the user.
@@ -192,7 +162,7 @@ class Budget:
     
     if len(args) < 2:
       passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
-    elif args[1] == '-c' and len(args) ==2:  #Probs can replacing the second cond. w/ len(args) <4
+    elif args[1] == '-C' and len(args) ==2:  #Probs can replacing the second cond. w/ len(args) <4
       
       newCategory = versionless_input("Enter the category you'd like to create: ").strip()
       if newCategory != "":
@@ -248,7 +218,7 @@ class Budget:
       
     if len(args) < 2:
       passedMsg = "\n\tError!  Use the following parameters for the 'del' function:\n\t-e: Delete an expense.\n\t-c: Delete a category.\n"
-    elif args[1] == '-c' and len(args) ==2:
+    elif args[1] == '-C' and len(args) ==2:
       
       stdin = versionless_input("Enter the category you'd like to delete: ").strip()
       if stdin != "":
