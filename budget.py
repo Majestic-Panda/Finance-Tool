@@ -179,8 +179,62 @@ class Budget:
     if passedMsg != "":
       print(passedMsg)
     print("\t---------------------------------\n")  
+  def add_Item(self, args):
+    """
+    Adds an item based on parameters inputted by the user.
     
-  def delItem(self, args):
+    -del -e: Begins the functions to create an expense based on a chosen category.
+    -del -c: Creates a chosen category.  
+    
+    """
+    self.class_printBudget()
+    passedMsg = ""
+    
+    if len(args) < 2:
+      passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
+    elif args[1] == '-c' and len(args) ==2:  #Probs can replacing the second cond. w/ len(args) <4
+      
+      newCategory = versionless_input("Enter the category you'd like to create: ").strip()
+      if newCategory != "":
+        stdin = versionless_input("Are you sure you'd like to create '"+newCategory+"' onto this database? (y/n): ")
+        if stdin == "y" or stdin == "yes":
+          self.budget[newCategory] = []
+          writeBudget(self.budget)
+          
+          passedMsg = "\n\t'"+newCategory+"' has been added!\n"
+      
+    elif args[1] == '-e' and len(args) ==2:
+      chosenCategory = ""
+      stdin = versionless_input("Enter the category of this new expense: ")
+      
+      if stdin != "":
+        for Category in self.budget:
+          if Category.lower() == stdin.lower():
+            chosenCategory = Category
+            break
+                  
+        if chosenCategory != "":
+          addedExpense = []
+          addedExpense.append(versionless_input("Enter the name of the expense to be created in "+chosenCategory+": "))
+        
+        try:
+          addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": $")) 
+          addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): $")) 
+
+          self.budget[chosenCategory].append({addedExpense[0]: [float(addedExpense[1]),float(addedExpense[2])] })
+          passedMsg = "\n\t'"+addedExpense[0]+"' has been successfully added to "+chosenCategory+"!\n"
+          writeBudget(self.budget)
+          
+        except:
+          passedMsg = "\n\tSomething happened!  Error messages will be more exact in the future! ;3\n"
+    elif len(args) > 2:
+      passedMsg =  "\n\tError!  Too many arguments!\n"
+    else:
+      passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
+    self.class_printBudget(passedMsg) 
+    
+    
+  def delete_Item(self, args):
     """
     Deletes an item based on parameters inputted by the user.
     

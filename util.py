@@ -23,7 +23,7 @@ def closePy():
     _ = system('exit()') 
   
   else: 
-    _ = system('clear') 
+    _ = system('exit()') 
         
 def versionless_input(inputMsg):
     

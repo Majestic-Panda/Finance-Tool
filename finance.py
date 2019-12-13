@@ -24,15 +24,15 @@ def addExpense(category, budget):
 while True:
   budget = openBudget()
   budget_object = Budget()
-  stdinArray = []
+  args = []
     
   stdin = versionless_input(">> ").strip()
   
   #uses a function that checks py version to call the built-in input function
   try:
-    stdinArray = stdin.split()
+    args = stdin.split()
   except:
-    stdinArray.append(stdin)
+    args.append(stdin)
     
   if stdin == "exit" or stdin == "e":
     print("Goodbye")
@@ -42,19 +42,15 @@ while True:
     writeBudget(budget_raw)
   elif stdin == 'alt -p' or stdin == "alt -a":
     alterExpense(budget, stdin)
-  elif stdin == "add":
-    createNewExpense(budget)
-  elif stdin == "add -c":
-    addCategory(budget)
   elif stdin == "print":
     budget_object.class_printBudget()
   elif stdin == "-v":
     fetchPythonVersion("list")
-  elif stdinArray[0] == "test":
-    calcExpense(budget, stdin)
-  elif stdinArray[0] == 'del':
-      budget_object.delete_Item(stdinArray)
-  elif stdinArray[0] == "help":
+  elif args[0] == 'add':
+    budget_object.add_Item(args)
+  elif args[0] == 'del':
+      budget_object.delete_Item(args)
+  elif args[0] == "help":
     help(Budget.delete_Item)
         
   
