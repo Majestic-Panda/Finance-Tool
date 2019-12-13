@@ -1,60 +1,6 @@
 import json
 from util import *
 
-budget = {}
-
-def openBudget():
-  with open('budget.json','r') as json_file:
-    budget_raw = json.loads(json_file.read())
-  return budget_raw
-
-def writeBudget(budget):
-  with open('budget.json','w') as json_file:
-    json_file.write(json.dumps(budget))
-
-def printBudget(data, passedMsg = ""):
-  printHeader(passedMsg)
-
-  for Category in data: #each category (Income, Personal, etc.)
-    print(Category+":\n\t")
-    list_of_expenses = data[Category] #holds the list of expenses for a given category
-        
-    i=0
-    while i < len(list_of_expenses):    #iterates down the list of expenses
-            #Each list item is a dict containing the name of the expense & a list of $ values.
-      tmp_expense = list_of_expenses[i]
-            
-      for item in tmp_expense:
-        expense = "\t"+item
-                #mp_expense[item][x]) is the list associated with a given dict key.
-        diff = tmp_expense[item][0] - tmp_expense[item][1] 
-        print('{:<10s}{:>15.2f}{:>10.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1], diff))            
-      i += 1 
-  print("\n")
-    
-def calcExpense(budget, string):
-    clear()
-    printBudget(budget)
-    successMsg=""
-    
-    
-    stdin = versionless_input("B:")
-    
-    
-def printHeader(passedMsg):
-  clear()
-  print("\n======  Cristian's Finance Keeper v0.015 ======\n")
-  print("\t My Personal Budgeting Program")
-  now = datetime.now()
-  current_time = now.strftime("%H:%M:%S")
-  print("\t Current Time: " + current_time)
-    
-  if passedMsg != "":
-    print(passedMsg)
-  print("\t---------------------------------\n")
-
-#########################################################################
-
 class Budget:
   def __init__(self, file_stream = "budget.json"):
     self.budget = self.openBudget(file_stream)
@@ -64,6 +10,10 @@ class Budget:
     with open(file_name,'r') as json_file:
       budget_raw = json.loads(json_file.read())
     return budget_raw
+  
+  def writeBudget(self):
+    with open('budget.json','w') as json_file:
+      json_file.write(json.dumps(self.budget))
   def printBudget(self, passedMsg = ""):
     self.printHeader(passedMsg)
     
@@ -128,7 +78,7 @@ class Budget:
               self.budget[newValue] = self.budget[Category]
               del self.budget[Category]
               
-              writeBudget(self.budget)
+              self.writeBudget(self.budget)
               passedMsg = "\n\t"+Category+" successfully changed to "+newValue+"!\n"
               break
           
@@ -149,7 +99,7 @@ class Budget:
                 
                 stdin = versionless_input("Change "+item+"'s planned value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
-                  writeBudget(self.budget)
+                  self.writeBudget(self.budget)
                   
                   passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
               elif cmd == '-a':
@@ -157,7 +107,7 @@ class Budget:
                 
                 stdin = versionless_input("Change "+item+"'s actual value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
-                  writeBudget(self.budget)
+                  self.writeBudget(self.budget)
                   
                   passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
 
@@ -185,7 +135,7 @@ class Budget:
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][0] = float(stdin)
-                    writeBudget(self.budget)
+                    self.writeBudget(self.budget)
                     passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
                     passedMsg = "\n\t"+stdin+" is not a valid number!\n"
@@ -193,7 +143,7 @@ class Budget:
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][1] = float(stdin)
-                    writeBudget(self.budget)
+                    self.writeBudget(self.budget)
                     passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
                     passedMsg = "\n\t"+stdin+" is not a valid number!\n"
@@ -233,7 +183,7 @@ class Budget:
         stdin = versionless_input("Are you sure you'd like to create '"+newCategory+"' onto this database? (y/n): ")
         if stdin == "y" or stdin == "yes":
           self.budget[newCategory] = []
-          writeBudget(self.budget)
+          self.writeBudget(self.budget)
           
           passedMsg = "\n\t'"+newCategory+"' has been added!\n"
       
@@ -257,7 +207,7 @@ class Budget:
 
           self.budget[chosenCategory].append({addedExpense[0]: [float(addedExpense[1]),float(addedExpense[2])] })
           passedMsg = "\n\t'"+addedExpense[0]+"' has been successfully added to "+chosenCategory+"!\n"
-          writeBudget(self.budget)
+          self.writeBudget(self.budget)
           
         except:
           passedMsg = "\n\tSomething happened!  Error messages will be more exact in the future! ;3\n"
@@ -291,7 +241,7 @@ class Budget:
             stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
             if stdin == "y" or stdin == "yes":
               del self.budget[Category]
-              writeBudget(self.budget)
+              self.writeBudget(self.budget)
               passedMsg = "\n\tItem successfully removed!\n"
               break
           
@@ -316,7 +266,7 @@ class Budget:
                 if stdin == "y" or stdin == "yes":
                   index = {item: tmp_expense[item]}
                   self.budget[Category].remove(index)
-                  writeBudget(self.budget)
+                  self.writeBudget(self.budget)
                   
                   passedMsg = "\n\tItem successfully removed!\n"
             i+=1

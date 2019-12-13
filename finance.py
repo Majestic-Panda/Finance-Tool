@@ -2,8 +2,6 @@ import json, sys
 from budget import *
 from util import *
 from datetime import datetime
-
-budget = {}
         
 budget_raw = {
   "Bills":[
@@ -16,13 +14,11 @@ budget_raw = {
       ]
 }
 
-printBudget(openBudget())
-
+budget_debug = Budget()
+budget_debug.printBudget()  
 while True:
-  budget = openBudget()
-  budget_object = Budget()
+  budget = Budget()
   args = []
-    
   stdin = versionless_input(">> ").strip()
   
   #uses a function that checks py version to call the built-in input function
@@ -36,23 +32,21 @@ while True:
       print("Goodbye")
             
       break
-    elif stdin == "start budget":
-      writeBudget(budget_raw)
-    #elif stdin == 'alt -p' or stdin == "alt -a":
-     # alterExpense(budget, stdin)
+    #elif stdin == "start budget":
+      #writeBudget(budget_raw)
     elif stdin == "print":
-      budget_object.printBudget()
+      budget.printBudget()
     elif args[0] == "-v" and len(args) < 2:
       fetchPythonVersion("list")
     elif args[0] == 'alt':
-      budget_object.alter_Item(args)
+      budget.alter_Item(args)
     elif args[0] == 'add':
-      budget_object.add_Item(args)
+      budget.add_Item(args)
     elif args[0] == 'del':
-        budget_object.delete_Item(args)
+        budget.delete_Item(args)
     elif args[0] == "help":
       help(Budget.delete_Item)
   except IndexError:
-    budget_object.printBudget()
+    budget.printBudget()
 	
 closePy()
