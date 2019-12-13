@@ -32,3 +32,13 @@ def versionless_input(inputMsg):
   else:
     stdin = input(inputMsg)
   return stdin
+def listComp(args, length = 1):
+  """
+  Tests of a list is less than the given int paremeter, otherwise it'll
+  check if the list is empty by returning its length
+  """
+  
+  if len(args) < length:
+    return True
+  else:
+    return False

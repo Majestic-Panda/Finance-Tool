@@ -141,24 +141,80 @@ class Budget:
       print(passedMsg)
     print("\t---------------------------------\n")  
     
-  def alter_Item():
+  def alter_Item(self, args):
     """
     Edits the values of a given expense or Category.
     
     -Functions to be added as the function is written.  
     
     """
-  
+    self.class_printBudget()
+    passedMsg = ""
+    
+    try:
+      cmd = args[1]
+      item_to_alter = args[2]
+      newValue = args[3]
+      
+      for Category in self.budget:
+      
+        if cmd == '-C':  # First check: alter the name of the Category first, if successful, break
+          if item_to_alter.lower() == Category.lower():
+            
+            stdin = versionless_input("Are you sure you wish to change "+Category+" to "+newValue+"? (y/n): ")
+            if stdin == "y" or stdin == "yes":
+              self.budget[newValue] = self.budget[Category]
+              del self.budget[Category]
+              
+              writeBudget(self.budget)
+              passedMsg = "\n\t"+Category+" successfully changed to "+newValue+"!\n"
+              break
+       
+        i = 0
+        list_of_expenses = self.budget[Category]
+        
+        while i <len(list_of_expenses):
+          tmp_expense = list_of_expenses[i]
+          
+          for item in tmp_expense:
+            if item.lower() == item_to_alter.lower():
+              if cmd == '-p':
+                tmp_expense[item][0] = float(newValue) #throws an exception if this fails
+                
+                stdin = versionless_input("Change "+item+"'s planned value to $"+newValue+"? (y/n): " )
+                if stdin == "y" or stdin == "yes":
+                  writeBudget(self.budget)
+                  
+                  passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
+          #for item in tmp_expenses:
+            #if item.lower() == args[3]:
+          i += 1      
+        
+      self.class_printBudget(passedMsg)
+    except IndexError: #if args[1] is empty
+      passedMsg = "\n\tSomething went wrong :-(\n"
+    
+      if len(args) < 2:
+        passedMsg = "\n\tNot enough parameters given, type help(alt) for more assistance.\n"
+      
+    
+      elif len(args) > 4:
+        passedMsg =  "\n\tError!  Too many arguments!\n"
+    except ValueError: # If converting newValue to float fails
+      passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+    self.class_printBudget(passedMsg)
+    
   def add_Item(self, args):
     """
     Adds an item based on parameters inputted by the user.
     
     -del -e: Begins the functions to create an expense based on a chosen category.
-    -del -c: Creates a chosen category.  
+    -del -C: Creates a chosen category.  
     
     """
     self.class_printBudget()
     passedMsg = ""
+    
     
     if len(args) < 2:
       passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
