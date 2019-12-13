@@ -57,15 +57,15 @@ def printHeader(passedMsg):
 
 class Budget:
   def __init__(self, file_stream = "budget.json"):
-    self.budget = self.class_openBudget(file_stream)
+    self.budget = self.openBudget(file_stream)
     
     
-  def class_openBudget(self, file_name):
+  def openBudget(self, file_name):
     with open(file_name,'r') as json_file:
       budget_raw = json.loads(json_file.read())
     return budget_raw
-  def class_printBudget(self, passedMsg = ""):
-    self.class_printHeader(passedMsg)
+  def printBudget(self, passedMsg = ""):
+    self.printHeader(passedMsg)
     
     for Category in self.budget: #each category (Income, Personal, etc.)
       print(Category+":\n\t")
@@ -83,7 +83,7 @@ class Budget:
           print('{:<10s}{:>15.2f}{:>10.2f}{:>10.2f}'.format(expense, tmp_expense[item][0], tmp_expense[item][1], diff))            
         i += 1 
     print("\n")    
-  def class_printHeader(self, passedMsg = ""):
+  def printHeader(self, passedMsg = ""):
     clear()
     print("\n======  Cristian's Finance Keeper v0.015 ======\n")
     print("\t My Personal Budgeting Program")
@@ -105,7 +105,7 @@ class Budget:
     -Functions to be added as the function is written.  
     
     """
-    self.class_printBudget()
+    self.printBudget()
     passedMsg = ""
     
     try:
@@ -163,7 +163,7 @@ class Budget:
 
           i += 1 # Increments the while loop, cycles through the expenses for a given category
         
-      self.class_printBudget(passedMsg)
+      self.printBudget(passedMsg)
       
     except IndexError: #if args[1] is empty
       cmd = args[1]
@@ -185,18 +185,18 @@ class Budget:
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][0] = float(stdin)
-                    writeBudget(budget)
+                    writeBudget(self.budget)
                     passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
-                    passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+                    passedMsg = "\n\t"+stdin+" is not a valid number!\n"
                 if cmd == '-a':
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][1] = float(stdin)
-                    writeBudget(budget)
+                    writeBudget(self.budget)
                     passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
-                    passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+                    passedMsg = "\n\t"+stdin+" is not a valid number!\n"
                     
             i+=1          
       if len(args) < 2:
@@ -210,7 +210,7 @@ class Budget:
     
     
     
-    self.class_printBudget(passedMsg)
+    self.printBudget(passedMsg)
     
   def add_Item(self, args):
     """
@@ -220,7 +220,7 @@ class Budget:
     -del -C: Creates a chosen category.  
     
     """
-    self.class_printBudget()
+    self.printBudget()
     passedMsg = ""
     
     
@@ -265,7 +265,7 @@ class Budget:
       passedMsg =  "\n\tError!  Too many arguments!\n"
     else:
       passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
-    self.class_printBudget(passedMsg) 
+    self.printBudget(passedMsg) 
     
     
   def delete_Item(self, args):
@@ -277,7 +277,7 @@ class Budget:
     
     """
 
-    self.class_printBudget()
+    self.printBudget()
     passedMsg = ""
       
     if len(args) < 2:
@@ -324,4 +324,4 @@ class Budget:
       passedMsg =  "\n\tError!  Too many arguments!\n"
     else:
       passedMsg = "\n\tError!  Use the following parameters for the 'del' function:\n\t-e: Delete an expense.\n\t-c: Delete a category.\n"
-    self.class_printBudget(passedMsg)  
+    self.printBudget(passedMsg)  

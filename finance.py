@@ -36,15 +36,15 @@ while True:
       print("Goodbye")
             
       break
-    elif stdin == "save":
+    elif stdin == "start budget":
       writeBudget(budget_raw)
     #elif stdin == 'alt -p' or stdin == "alt -a":
      # alterExpense(budget, stdin)
     elif stdin == "print":
-      budget_object.class_printBudget()
+      budget_object.printBudget()
     elif args[0] == "-v" and len(args) < 2:
       fetchPythonVersion("list")
-    elif args[0] == 'a':
+    elif args[0] == 'alt':
       budget_object.alter_Item(args)
     elif args[0] == 'add':
       budget_object.add_Item(args)
@@ -53,6 +53,6 @@ while True:
     elif args[0] == "help":
       help(Budget.delete_Item)
   except IndexError:
-    budget_object.class_printBudget()
+    budget_object.printBudget()
 	
 closePy()
