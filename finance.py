@@ -38,8 +38,8 @@ while True:
       break
     elif stdin == "save":
       writeBudget(budget_raw)
-    elif stdin == 'alt -p' or stdin == "alt -a":
-      alterExpense(budget, stdin)
+    #elif stdin == 'alt -p' or stdin == "alt -a":
+     # alterExpense(budget, stdin)
     elif stdin == "print":
       budget_object.class_printBudget()
     elif args[0] == "-v" and len(args) < 2:

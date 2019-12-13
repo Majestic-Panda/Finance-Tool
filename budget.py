@@ -11,50 +11,7 @@ def openBudget():
 def writeBudget(budget):
   with open('budget.json','w') as json_file:
     json_file.write(json.dumps(budget))
-    
-def alterExpense(budget, cmd):
-  successMsg = ""
-  if cmd == "alt -p" or cmd == "alt -a":
-        
-    stdin = versionless_input("Enter an expense to alter: ")
-    print("")
-        
-    for Category in budget:
-      list_of_expenses = budget[Category] #holds the list of expenses for a given category
-            
-      i=0
-            
-      while i < len(list_of_expenses):    #iterates down the list of expenses
-                #Each list item is a dict containing the name of the expense & a list of $ values.
-        tmp_expense = list_of_expenses[i]
-                
-        for item in tmp_expense:
-          if item.lower() == stdin.lower():
-                        
-                        #If input = -ap, alter planned.  If -aa, alter actual.         
-            if cmd == "alt -p":
-              stdin = versionless_input("Replace PLANNED value for "+item+": " )
-              print("")
-              try:
-                tmp_expense[item][0] = float(stdin)
-                writeBudget(budget)
-                successMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
-              except:
-                successMsg="\n\tValue is not a number!\n" 
-            elif cmd == "alt -a":
-              stdin = versionless_input("Replace ACTUAL value for "+item+": " )
-              print("")
-              try:
-                tmp_expense[item][1] = float(stdin)
-                writeBudget(budget)
-                successMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
-              except:
-                successMsg="\n\tValue is not a number!\n"                         
-        i += 1 
-    
-    printBudget(budget, successMsg)
-  
-  printBudget(budget)
+
 def printBudget(data, passedMsg = ""):
   printHeader(passedMsg)
 
@@ -155,10 +112,15 @@ class Budget:
       cmd = args[1]
       item_to_alter = args[2]
       newValue = args[3]
+      dup = 0
       
       for Category in self.budget:
+        if newValue.lower() == Category.lower():
+          dup = 1
       
-        if cmd == '-C':  # First check: alter the name of the Category first, if successful, break
+      for Category in self.budget:
+        if cmd == '-C' and dup == 0:  # First check: alter the name of the Category first, if successful, break
+          
           if item_to_alter.lower() == Category.lower():
             
             stdin = versionless_input("Are you sure you wish to change "+Category+" to "+newValue+"? (y/n): ")
@@ -169,7 +131,11 @@ class Budget:
               writeBudget(self.budget)
               passedMsg = "\n\t"+Category+" successfully changed to "+newValue+"!\n"
               break
-       
+          
+        elif dup == 1:
+          passedMsg = "\n\t"+newValue+" already exists!\n"
+          break
+        
         i = 0
         list_of_expenses = self.budget[Category]
         
@@ -186,14 +152,53 @@ class Budget:
                   writeBudget(self.budget)
                   
                   passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
-          #for item in tmp_expenses:
-            #if item.lower() == args[3]:
-          i += 1      
+              elif cmd == '-a':
+                tmp_expense[item][1] = float(newValue) #throws an exception if this fails
+                
+                stdin = versionless_input("Change "+item+"'s actual value to $"+newValue+"? (y/n): " )
+                if stdin == "y" or stdin == "yes":
+                  writeBudget(self.budget)
+                  
+                  passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
+
+          i += 1 # Increments the while loop, cycles through the expenses for a given category
         
       self.class_printBudget(passedMsg)
+      
     except IndexError: #if args[1] is empty
-      passedMsg = "\n\tSomething went wrong :-(\n"
-    
+      cmd = args[1]
+      passedMsg = "\n\tHere\n"
+      if len(args) == 2:
+        stdin = versionless_input("Enter an expense to alter: ")
+        
+        for Category in self.budget:
+          list_of_expenses = self.budget[Category] #holds the list of expenses for a given category
+        
+          i = 0
+          while i < len(list_of_expenses):
+            tmp_expense = list_of_expenses[i]
+            
+            for item in tmp_expense:
+              if item.lower() == stdin.lower():
+                
+                if cmd == '-p':
+                  stdin = versionless_input("Replace PLANNED value for "+item+": " )
+                  try:
+                    tmp_expense[item][0] = float(stdin)
+                    writeBudget(budget)
+                    passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
+                  except:
+                    passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+                if cmd == '-a':
+                  stdin = versionless_input("Replace PLANNED value for "+item+": " )
+                  try:
+                    tmp_expense[item][1] = float(stdin)
+                    writeBudget(budget)
+                    passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
+                  except:
+                    passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+                    
+            i+=1          
       if len(args) < 2:
         passedMsg = "\n\tNot enough parameters given, type help(alt) for more assistance.\n"
       
@@ -202,6 +207,9 @@ class Budget:
         passedMsg =  "\n\tError!  Too many arguments!\n"
     except ValueError: # If converting newValue to float fails
       passedMsg = "\n\t"+newValue+" is not a valid number!\n"
+    
+    
+    
     self.class_printBudget(passedMsg)
     
   def add_Item(self, args):
