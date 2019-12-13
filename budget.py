@@ -1,6 +1,7 @@
 import json
 from util import *
 
+#
 class Budget:
   def __init__(self, file_stream = "budget.json"):
     self.budget = self.openBudget(file_stream)
