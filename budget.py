@@ -7,9 +7,11 @@ class Budget:
   user = ""
   
   
+  
   def __init__(self, file_stream = "json_files\\budget.json"):
     self.budget = self.openBudget(file_stream)
-  def openBudget(self, file_name):
+    self.path = file_stream
+  def openBudget(self, file_name, perms = 'r'):
     with open(file_name,'r') as json_file:
       budget_raw = json.loads(json_file.read())
     return budget_raw
