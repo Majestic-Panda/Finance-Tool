@@ -1,4 +1,4 @@
-import sys
+import sys, json
 from os import system, name
 from datetime import datetime
 
@@ -32,13 +32,11 @@ def versionless_input(inputMsg):
   else:
     stdin = input(inputMsg)
   return stdin
-def listComp(args, length = 1):
-  """
-  Tests of a list is less than the given int paremeter, otherwise it'll
-  check if the list is empty by returning its length
-  """
-  
-  if len(args) < length:
-    return True
-  else:
-    return False
+
+def openJSON(file_path, perms = 'r'):
+  with open(file_path, perms) as json_file:
+    file = json.loads(json_file.read())
+  return file
+def writeJSON(buffer, file_path, perms = 'w'):
+  with open(file_path, perms) as json_file:
+    json_file.write(json.dumps(buffer))

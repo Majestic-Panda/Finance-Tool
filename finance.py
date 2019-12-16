@@ -13,7 +13,7 @@ budget_raw = {
       {"Groceries":[150, 57]}
       ]
 }
-budget = Budget()
+
 def run(budget):
   while True:
     
@@ -54,4 +54,5 @@ def run(budget):
   	
   closePy()  
   
+budget = Budget()
 run(budget)

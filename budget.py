@@ -7,14 +7,16 @@ class Budget:
   user = ""
   
   
-  def __init__(self, file_stream = "budget.json"):
+  
+  def __init__(self, file_stream = "json_files\\budget.json"):
     self.budget = self.openBudget(file_stream)
-  def openBudget(self, file_name):
+    self.path = file_stream
+  def openBudget(self, file_name, perms = 'r'):
     with open(file_name,'r') as json_file:
       budget_raw = json.loads(json_file.read())
     return budget_raw
   def writeBudget(self):
-    with open('budget.json','w') as json_file:
+    with open('json_files\\budget.json','w') as json_file:
       json_file.write(json.dumps(self.budget))
   def printBudget(self, passedMsg = ""):
     self.printHeader(passedMsg)
