@@ -1,5 +1,6 @@
 import json, sys
 from budget import *
+from config import *
 from util import *
 from datetime import datetime
         
@@ -53,6 +54,5 @@ def run(budget):
       continue
   	
   closePy()  
-  
 budget = Budget()
 run(budget)
