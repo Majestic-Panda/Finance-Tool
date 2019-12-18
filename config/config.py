@@ -11,6 +11,6 @@ class User:
   
   def __init__(self, file_stream = "config\\config.json"):
     self.config = self.openConfig(file_stream)
-      
+ 
 
   
