@@ -1,6 +1,6 @@
 import json, sys
 from budget import *
-from config import *
+from user import *
 from util import *
 from datetime import datetime
         
@@ -28,6 +28,7 @@ def run(budget):
     except IndexError:
       args.append(stdin)
     except EOFError:
+      print("Goodbye")
       break
     
     try:
@@ -50,9 +51,11 @@ def run(budget):
           budget.delete_Item(args)
       elif args[0] == "help":
         budget.budgetHelp(args)
+      
     except IndexError:
       continue
   	
-  closePy()  
+  closePy()
+user = User()  
 budget = Budget()
 run(budget)
