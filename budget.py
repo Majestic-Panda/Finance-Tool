@@ -6,14 +6,9 @@ class Budget:
   passedMsg = ""
   user = ""
   
-  
-  
   def __init__(self, file_stream = "json_files\\budget.json"):
     self.budget = openJSON(file_stream)
     self.path = file_stream
-  def writeBudget(self):
-    with open('json_files\\budget.json','w') as json_file:
-      json_file.write(json.dumps(self.budget))
   def printBudget(self, passedMsg = ""):
     self.printHeader(passedMsg)
     
@@ -76,7 +71,7 @@ class Budget:
               self.budget[newValue] = self.budget[Category]
               del self.budget[Category]
               
-              self.writeBudget(self.budget)
+              writeJSON(self.budget, self.path)
               passedMsg = "\n\t"+Category+" successfully changed to "+newValue+"!\n"
               break
           
@@ -97,7 +92,7 @@ class Budget:
                 
                 stdin = versionless_input("Change "+item+"'s planned value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
-                  self.writeBudget(self.budget)
+                  writeJSON(self.budget, self.path)
                   
                   self.passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
               elif cmd == '-a':
@@ -105,7 +100,7 @@ class Budget:
                 
                 stdin = versionless_input("Change "+item+"'s actual value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
-                  self.writeBudget(self.budget)
+                  writeJSON(self.budget, self.path)
                   
                   self.passedMsg = "\n\t"+item+" successfully changed to $"+newValue+"!\n"
 
@@ -132,7 +127,7 @@ class Budget:
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][0] = float(stdin)
-                    self.writeBudget(self.budget)
+                    writeJSON(self.budget, self.path)
                     self.passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
                     self.passedMsg = "\n\t"+stdin+" is not a valid number!\n"
@@ -140,7 +135,7 @@ class Budget:
                   stdin = versionless_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][1] = float(stdin)
-                    self.writeBudget(self.budget)
+                    writeJSON(self.budget, self.path)
                     passedMsg = "\n\t"+item+" was changed to "+stdin+"!\n"
                   except:
                     self.passedMsg = "\n\t"+stdin+" is not a valid number!\n"
@@ -176,7 +171,7 @@ class Budget:
         stdin = versionless_input("Are you sure you'd like to create '"+newCategory+"' onto this database? (y/n): ")
         if stdin == "y" or stdin == "yes":
           self.budget[newCategory] = []
-          self.writeBudget(self.budget)
+          writeJSON(self.budget, self.path)
           
           self.passedMsg = "\n\t'"+newCategory+"' has been added!\n"
       
@@ -234,7 +229,7 @@ class Budget:
             stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
             if stdin == "y" or stdin == "yes":
               del self.budget[Category]
-              self.writeBudget(self.budget)
+              writeJSON(self.budget, self.path)
               self.passedMsg = "\n\tItem successfully removed!\n"
               break
           
@@ -259,7 +254,7 @@ class Budget:
                 if stdin == "y" or stdin == "yes":
                   index = {item: tmp_expense[item]}
                   self.budget[Category].remove(index)
-                  self.writeBudget(self.budget)
+                  writeJSON(self.budget, self.path)
                   
                   self.passedMsg = "\n\tItem successfully removed!\n"
             i+=1
