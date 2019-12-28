@@ -25,12 +25,15 @@ def closePy():
   else: 
     _ = system('exit()') 
         
-def versionless_input(inputMsg):
-    
+def strip_input(inputMsg):
+  """
+    Runs a test for the version of python, then runs the input function for
+    its respective version.
+  """
   if fetchPythonVersion("num") < 3:
-    stdin = raw_input(inputMsg)
+    stdin = raw_input(inputMsg).strip()
   else:
-    stdin = input(inputMsg)
+    stdin = input(inputMsg).strip()
   return stdin
 
 def openJSON(file_path, perms = 'r'):

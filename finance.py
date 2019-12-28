@@ -23,7 +23,7 @@ def run(budget):
     #uses a function that checks py version to call the built-in input function
     try:
       args = []
-      stdin = versionless_input(">> ").strip()
+      stdin = strip_input(">> ").strip()
       args = stdin.split()
     except IndexError:
       args.append(stdin)
@@ -42,7 +42,7 @@ def run(budget):
       elif args[0] == "-v" and len(args) < 2:
         clear()
         fetchPythonVersion("list")
-        versionless_input("\nPress ENTER to return...")
+        strip_input("\nPress ENTER to return...")
       elif args[0] == 'alt':
         budget.alter_Item(args)
       elif args[0] == 'add':
@@ -57,5 +57,5 @@ def run(budget):
   	
   closePy()
 user = User()  
-budget = Budget()
+budget = Budget(user)
 run(budget)
