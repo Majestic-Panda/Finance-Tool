@@ -1,13 +1,9 @@
-import json, os
-from util import openJSON, writeJSON, clear, versionless_input as vInput 
+import os, hashlib
+
+from util import openJSON, writeJSON, clear, strip_input as vInput 
+
 
 class User:
-  settings = {
-    'user':"",
-    'backup_filename':"budget_backup.json",
-    'pin':"",
-    'motd':""
-  }
   path = "config\\config.json"
   
   def __init__(self, file_stream = "config\\config.json"):
@@ -15,7 +11,7 @@ class User:
     try:
       if not os.path.isfile(file_stream):
         print("Config file missing or corrupted!")
-           
+        self.resetSettings()   
         self.createUserSettings()
 
         
@@ -32,33 +28,36 @@ class User:
     cont = 1
     while cont == 1:  #loop awaiting user input
       clear()
-      self.settings['user'] = vInput("Enter a user for this program: ")  
-      while True: #loop that validates the pin
+      self.config['user'] = vInput("Enter a user for this program (enter nothing for no user config): ")  
+      while self.config['user'] != "": #loop that validates the pin
         try:
           pin = vInput("Enter a 4 - 8 digit pin for yourself (enter nothing for no pin): ")
           
           if pin == "":
             break
           
-          self.settings['pin'] = int(pin)
-          assert 4 <= len(pin) <= 8 
-    
+          self.config['pin']= int(pin)
+          assert 4 <= len(pin) <= 8
           
+       
         except ValueError:
           print("Please use numbers for your pin (enter nothing for no pin): ")
         except AssertionError:
-          print("Please enter a pin sized 4-8 characters (enter nothing for no pin): ")
+          print("Please enter a pin 4-8 numbers long (enter nothing for no pin): ")
         else:
           break
   
       while True: #loop that validates a MOTD
         try:
+          if self.config['user'] == "":
+            cont = 0
+            break
           stdin = vInput("Would you like to add a msg of the day? (y/n): ")  
         
           assert stdin == 'y' or stdin == 'n'
         
           if stdin == 'y':
-            self.settings['motd'] = vInput("Please enter a MOTD for yourself: ")
+            self.config['motd'] = vInput("Please enter a MOTD for yourself: ")
             break
           elif stdin == 'n':
             break
@@ -67,16 +66,19 @@ class User:
       
       while True:
         try:
+          if self.config['user'] == "":
+            cont = 0
+            break
           clear() #clears screen, prints the user's inputs
-          print("User: "+self.settings['user'])
-          if self.settings['pin'] == "":
+          print("User: "+self.config['user'])
+          if self.config['pin'] == "":
             print("No pin set.")
           else:
-            print("Pin: " + self.settings['pin'])
-          if self.settings['motd'] == "":
+            print("Pin: " + str(self.config['pin']))
+          if self.config['motd'] == "":
             print("No MOTD set.")
           else:
-            print("MOTD: " + self.settings['motd'])
+            print("MOTD: " + self.config['motd'])
         
           stdin = vInput("\nIs this info correct? (y/n): ")
           assert stdin == 'y' or stdin == 'n'
@@ -84,23 +86,32 @@ class User:
           if stdin == 'n':
             break
           elif stdin == 'y':
-            writeJSON(self.settings, self.path)
+            #hashes the pin before writing to file.
+            pin = str(self.config['pin'])
+            self.config['pin'] = hashlib.sha256(pin.encode()).hexdigest()
+            writeJSON(self.config, self.path)
+            cont = 0
+            break
           else:
             print("Enter 'y' or 'n'!")
         
         except AssertionError:
           self.resetSettings()
-          continue
-                
+          continue     
   def resetSettings(self):
-    self.settings = {
+    self.config = {
         'user':"",
         'backup_filename':"budget_backup.json",
         'pin':"",
         'motd':""
       }          
         
-        
+  def returnSettings(self):
+    return self.config
+  def returnUser(self):
+    return self.config['user']
+  def returnPin(self):
+    return self.config['pin']
           
           
           

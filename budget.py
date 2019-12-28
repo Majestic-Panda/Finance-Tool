@@ -1,14 +1,16 @@
-import json
 from util import *
 
 class Budget:
   
   passedMsg = ""
-  user = ""
   
-  def __init__(self, file_stream = "json_files\\budget.json"):
+  def __init__(self, userConfigFile, file_stream = "json_files\\budget.json"):
     self.budget = openJSON(file_stream)
     self.path = file_stream
+    self.config = userConfigFile.returnSettings()
+    self.user = userConfigFile.returnUser()
+    
+    
   def printBudget(self, passedMsg = ""):
     self.printHeader(passedMsg)
     
@@ -36,10 +38,10 @@ class Budget:
   def printHeader(self, passedMsg = ""):
     clear()
     print("\n======  Cristian's Finance Keeper v0.015 ======\n")
-    print("\t My Personal Budgeting Program")
+    print("\t"+self.config['user']+"'s Budget")
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
-    print("\t Current Time: " + current_time)
+    print("\tCurrent Time: " + current_time)
   
   def alter_Item(self, args):
     """
@@ -66,7 +68,7 @@ class Budget:
           
           if item_to_alter.lower() == Category.lower():
             
-            stdin = versionless_input("Are you sure you wish to change "+Category+" to "+newValue+"? (y/n): ")
+            stdin = strip_input("Are you sure you wish to change "+Category+" to "+newValue+"? (y/n): ")
             if stdin == "y" or stdin == "yes":
               self.budget[newValue] = self.budget[Category]
               del self.budget[Category]
@@ -90,7 +92,7 @@ class Budget:
               if cmd == '-p':
                 tmp_expense[item][0] = float(newValue) #throws an exception if this fails
                 
-                stdin = versionless_input("Change "+item+"'s planned value to $"+newValue+"? (y/n): " )
+                stdin = strip_input("Change "+item+"'s planned value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
                   writeJSON(self.budget, self.path)
                   
@@ -98,7 +100,7 @@ class Budget:
               elif cmd == '-a':
                 tmp_expense[item][1] = float(newValue) #throws an exception if this fails
                 
-                stdin = versionless_input("Change "+item+"'s actual value to $"+newValue+"? (y/n): " )
+                stdin = strip_input("Change "+item+"'s actual value to $"+newValue+"? (y/n): " )
                 if stdin == "y" or stdin == "yes":
                   writeJSON(self.budget, self.path)
                   
@@ -111,7 +113,7 @@ class Budget:
       cmd = args[1]
       self.passedMsg = "\n\tHere\n"
       if len(args) == 2:
-        stdin = versionless_input("Enter an expense to alter: ")
+        stdin = strip_input("Enter an expense to alter: ")
         
         for Category in self.budget:
           list_of_expenses = self.budget[Category] #holds the list of expenses for a given category
@@ -124,7 +126,7 @@ class Budget:
               if item.lower() == stdin.lower():
                 
                 if cmd == '-p':
-                  stdin = versionless_input("Replace PLANNED value for "+item+": " )
+                  stdin = strip_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][0] = float(stdin)
                     writeJSON(self.budget, self.path)
@@ -132,7 +134,7 @@ class Budget:
                   except:
                     self.passedMsg = "\n\t"+stdin+" is not a valid number!\n"
                 if cmd == '-a':
-                  stdin = versionless_input("Replace PLANNED value for "+item+": " )
+                  stdin = strip_input("Replace PLANNED value for "+item+": " )
                   try:
                     tmp_expense[item][1] = float(stdin)
                     writeJSON(self.budget, self.path)
@@ -166,9 +168,9 @@ class Budget:
       self.passedMsg = "\n\tError!  Use the following parameters for the 'add' function:\n\t-e: Add an expense.\n\t-c: Create a category.\n"
     elif args[1] == '-C' and len(args) ==2:  #Probs can replacing the second cond. w/ len(args) <4
       
-      newCategory = versionless_input("Enter the category you'd like to create: ").strip()
+      newCategory = strip_input("Enter the category you'd like to create: ").strip()
       if newCategory != "":
-        stdin = versionless_input("Are you sure you'd like to create '"+newCategory+"' onto this database? (y/n): ")
+        stdin = strip_input("Are you sure you'd like to create '"+newCategory+"' onto this database? (y/n): ")
         if stdin == "y" or stdin == "yes":
           self.budget[newCategory] = []
           writeJSON(self.budget, self.path)
@@ -177,7 +179,7 @@ class Budget:
       
     elif args[1] == '-e' and len(args) ==2:
       chosenCategory = ""
-      stdin = versionless_input("Enter the category of this new expense: ")
+      stdin = strip_input("Enter the category of this new expense: ")
       
       if stdin != "":
         for Category in self.budget:
@@ -187,11 +189,11 @@ class Budget:
                   
         if chosenCategory != "":
           addedExpense = []
-          addedExpense.append(versionless_input("Enter the name of the expense to be created in "+chosenCategory+": "))
+          addedExpense.append(strip_input("Enter the name of the expense to be created in "+chosenCategory+": "))
         
         try:
-          addedExpense.append(versionless_input("Enter the planned budget for "+addedExpense[0]+": $")) 
-          addedExpense.append(versionless_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): $")) 
+          addedExpense.append(strip_input("Enter the planned budget for "+addedExpense[0]+": $")) 
+          addedExpense.append(strip_input("Enter the actual spending for "+addedExpense[0]+" (blank if $0): $")) 
 
           self.budget[chosenCategory].append({addedExpense[0]: [float(addedExpense[1]),float(addedExpense[2])] })
           self.passedMsg = "\n\t'"+addedExpense[0]+"' has been successfully added to "+chosenCategory+"!\n"
@@ -222,11 +224,11 @@ class Budget:
       self.passedMsg = "\n\tError!  Use the following parameters for the 'del' function:\n\t-e: Delete an expense.\n\t-c: Delete a category.\n"
     elif args[1] == '-C' and len(args) ==2:
       
-      stdin = versionless_input("Enter the category you'd like to delete: ").strip()
+      stdin = strip_input("Enter the category you'd like to delete: ").strip()
       if stdin != "":
         for Category in self.budget:
           if stdin.lower() == Category.lower():
-            stdin = versionless_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
+            stdin = strip_input("Are you SURE you wish to delete "+Category+" from this database? (y/n): ")
             if stdin == "y" or stdin == "yes":
               del self.budget[Category]
               writeJSON(self.budget, self.path)
@@ -238,7 +240,7 @@ class Budget:
       
     elif args[1] == '-e' and len(args) ==2:
       
-      stdin = versionless_input("Enter which expense you'd like to delete: ").strip()
+      stdin = strip_input("Enter which expense you'd like to delete: ").strip()
       
       if stdin != "":
         for Category in self.budget:
@@ -250,7 +252,7 @@ class Budget:
                         
             for item in tmp_expense:
               if item.lower() == stdin.lower():
-                stdin = versionless_input("Are you sure you want to delete "+item+" from "+Category+"? (y/n): ").strip()
+                stdin = strip_input("Are you sure you want to delete "+item+" from "+Category+"? (y/n): ").strip()
                 if stdin == "y" or stdin == "yes":
                   index = {item: tmp_expense[item]}
                   self.budget[Category].remove(index)
@@ -296,7 +298,7 @@ class Budget:
         try:
           for cmd in helpList:
             print("-"+cmd+": "+helpList[cmd][0])
-          stdin = versionless_input("\nEnter the name a command for more info: ")
+          stdin = strip_input("\nEnter the name a command for more info: ")
           
           if stdin.lower() == 'quit' or stdin.lower() == 'q':
             break
@@ -314,7 +316,7 @@ class Budget:
                   print(helpList[item][i])
                 i+=1
               
-              stdin = versionless_input("\nPress ENTER to return, or type either 'quit' or 'q' to exit: ")
+              stdin = strip_input("\nPress ENTER to return, or type either 'quit' or 'q' to exit: ")
               if stdin.lower() == 'quit' or stdin.lower() == 'q': 
                 loop = 0
               break
@@ -335,7 +337,7 @@ class Budget:
               else:
                 print(helpList[item][i])
               i+=1
-            stdin = versionless_input("\nPress ENTER to return... ")
+            stdin = strip_input("\nPress ENTER to return... ")
             break
       except:
         self.passedMsg = "\t\nSomething went wrong...\n"
