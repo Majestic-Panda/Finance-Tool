@@ -29,6 +29,11 @@ class User:
     while cont == 1:  #loop awaiting user input
       clear()
       self.config['user'] = vInput("Enter a user for this program (enter nothing for no user config): ")  
+      
+      if self.config['user'] == "":
+        writeJSON(self.config, self.path)
+        break
+      
       while self.config['user'] != "": #loop that validates the pin
         try:
           pin = vInput("Enter a 4 - 8 digit pin for yourself (enter nothing for no pin): ")
@@ -97,11 +102,12 @@ class User:
         
         except AssertionError:
           self.resetSettings()
-          continue     
+          continue
+
   def resetSettings(self):
     self.config = {
         'user':"",
-        'backup_filename':"budget_backup.json",
+        'backup_filename':"json_files\\backups\\",
         'pin':"",
         'motd':""
       }          
@@ -112,6 +118,8 @@ class User:
     return self.config['user']
   def returnPin(self):
     return self.config['pin']
+  def returnBackupPath(self):
+    return self.config['backup_filename']
           
           
           
