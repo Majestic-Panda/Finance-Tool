@@ -281,7 +281,11 @@ class Budget:
             "-add -e: Begins the functions to create an expense based on a chosen category.",
             "-add -C: Creates a chosen category."
             ],
-        
+        "backup":[
+            "Prompts for the creation of a backup file in the json_files\\backups directory.",
+            "-Backups are saved in YYYY-MM-DD--HHMMSS format."
+            
+            ],
         "alt":[
             "Edits the values of a given expense or Category.",
             "-Functions to be added .",
@@ -306,7 +310,7 @@ class Budget:
         try:
           for cmd in helpList:
             print("-"+cmd+": "+helpList[cmd][0])
-          stdin = strip_input("\nEnter the name a command for more info: ")
+          stdin = strip_input("\nEnter the name a command for more info, or type 'q' to quit: ")
           
           if stdin.lower() == 'quit' or stdin.lower() == 'q':
             break
@@ -354,25 +358,37 @@ class Budget:
       self.passedMsg = "\n\tToo many parameters for Help!  Type in help for the full command list.\n"
 
 
-  def backup(self):
+  def backup(self, prompt = True):
     
-    while True:
-      stdin = strip_input("Create a backup of this budget? (y/n): ")
-      
-      if stdin.lower() in self.yes:
-        backup_path = self.config.returnBackupPath()
-        backup_path += strftime("%Y-%m-%d--", localtime()) 
-
-        backup_path += strftime("%H%M%S", localtime())+".json"
-        print(backup_path)
-        
-        writeJSON(self.budget, backup_path)
-        break
-      elif stdin.lower() in self.no:
-        break
-      else:
-        continue
-      
+    if prompt:
+      while True:
+        try:
+          reloop = False
+          if not reloop:
+            stdin = strip_input("Create a backup of this budget? (y/n): ")
+          
+          if stdin.lower() in self.yes:
+            backup_path = self.config.returnBackupPath()
+            file = strftime("%Y-%m-%d--", localtime()) 
+    
+            file += strftime("%H%M%S", localtime())+".json"
+            print(backup_path+file)
+            
+            writeJSON(self.budget, backup_path+file)
+            break
+          elif stdin.lower() in self.no:
+            break
+          else:
+            continue
+        except FileNotFoundError:
+          createDirectory(backup_path)
+          writeJSON(self.budget, backup_path+file)
+          break
+          
+        except OSError:
+          self.passedMsg = "Issue occurred created the backup directory..."
+          break
+          
       
       
       

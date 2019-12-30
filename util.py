@@ -1,5 +1,5 @@
 import sys, json
-from os import system, name
+from os import system, name, mkdir, makedirs
 from datetime import datetime
 
 def fetchPythonVersion(action):
@@ -43,3 +43,9 @@ def openJSON(file_path, perms = 'r'):
 def writeJSON(buffer, file_path, perms = 'w'):
   with open(file_path, perms) as json_file:
     json_file.write(json.dumps(buffer))
+def createDirectory(path):
+  try:
+    mkdir(path)
+  except OSError:
+    print("An error has occurred...")
+  
