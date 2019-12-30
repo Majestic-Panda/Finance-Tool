@@ -51,7 +51,8 @@ def run(budget):
           budget.delete_Item(args)
       elif args[0] == "help":
         budget.budgetHelp(args)
-      
+      elif args[0] == "backup":
+        budget.backup()
     except IndexError:
       continue
   	

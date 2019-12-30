@@ -1,14 +1,22 @@
 from util import *
+from time import localtime, strftime
 
 class Budget:
   
   passedMsg = ""
+  yes = ('yes','y','ye')
+  no = ('no','n','nope')
+  
   
   def __init__(self, userConfigFile, file_stream = "json_files\\budget.json"):
-    self.budget = openJSON(file_stream)
-    self.path = file_stream
-    self.config = userConfigFile.returnSettings()
-    self.user = userConfigFile.returnUser()
+    try:
+      self.budget = openJSON(file_stream)
+      self.path = file_stream
+      self.config = userConfigFile
+      self.user = userConfigFile.returnUser()
+      
+    except:
+      print("Something went wrong while creating the budget session...")
     
     
   def printBudget(self, passedMsg = ""):
@@ -38,7 +46,7 @@ class Budget:
   def printHeader(self, passedMsg = ""):
     clear()
     print("\n======  Cristian's Finance Keeper v0.015 ======\n")
-    print("\t"+self.config['user']+"'s Budget")
+    print("\t"+self.user+"'s Budget")
     now = datetime.now()
     current_time = now.strftime("%H:%M:%S")
     print("\tCurrent Time: " + current_time)
@@ -69,7 +77,7 @@ class Budget:
           if item_to_alter.lower() == Category.lower():
             
             stdin = strip_input("Are you sure you wish to change "+Category+" to "+newValue+"? (y/n): ")
-            if stdin == "y" or stdin == "yes":
+            if stdin in yes:
               self.budget[newValue] = self.budget[Category]
               del self.budget[Category]
               
@@ -344,8 +352,26 @@ class Budget:
       
     else:
       self.passedMsg = "\n\tToo many parameters for Help!  Type in help for the full command list.\n"
+
+
+  def backup(self):
+    
+    while True:
+      stdin = strip_input("Create a backup of this budget? (y/n): ")
       
-      
+      if stdin.lower() in self.yes:
+        backup_path = self.config.returnBackupPath()
+        backup_path += strftime("%Y-%m-%d--", localtime()) 
+
+        backup_path += strftime("%H%M%S", localtime())+".json"
+        print(backup_path)
+        
+        writeJSON(self.budget, backup_path)
+        break
+      elif stdin.lower() in self.no:
+        break
+      else:
+        continue
       
       
       
