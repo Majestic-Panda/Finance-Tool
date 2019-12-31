@@ -359,11 +359,12 @@ class Budget:
 
 
   def backup(self, prompt = True):
-    
+    reloop = False
+    loops = 10
     if prompt:
       while True:
         try:
-          reloop = False
+          
           if not reloop:
             stdin = strip_input("Create a backup of this budget? (y/n): ")
           
@@ -371,19 +372,21 @@ class Budget:
             backup_path = self.config.returnBackupPath()
             file = strftime("%Y-%m-%d--", localtime()) 
     
-            file += strftime("%H%M%S", localtime())+".json"
-            print(backup_path+file)
-            
+            file += strftime("%H%M%S", localtime())+".json"            
             writeJSON(self.budget, backup_path+file)
             break
           elif stdin.lower() in self.no:
             break
           else:
-            continue
+            if loops > 0:
+              loops -= 1
+              continue
+            else:
+              break
+          
         except FileNotFoundError:
           createDirectory(backup_path)
-          writeJSON(self.budget, backup_path+file)
-          break
+          reloop = True
           
         except OSError:
           self.passedMsg = "Issue occurred created the backup directory..."
