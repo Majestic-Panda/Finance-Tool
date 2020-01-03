@@ -119,8 +119,8 @@ class Budget:
       
     except IndexError: #if args[1] is empty
       cmd = args[1]
-      self.passedMsg = "\n\tHere\n"
       if len(args) == 2:
+        
         stdin = strip_input("Enter an expense to alter: ")
         
         for Category in self.budget:

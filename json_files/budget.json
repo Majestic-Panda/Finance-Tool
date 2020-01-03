@@ -1,1 +1,1 @@
-{"Personal": [{"Self": [100, 60]}, {"Groceries": [150, 57]}], "Test": [{"Rent": [365.0, 0]}, {"WiFi": [26, 0]}], "Income": []}
+{"Personal": [{"Self": [150.0, 60]}, {"Groceries": [150, 57]}], "Test": [{"Rent": [360.0, 0]}, {"WiFi": [26, 0]}], "Income": [{"Paycheck": [2000.0, 0.0]}]}

@@ -1,3 +1,15 @@
+"""
+To do:
+  -Pin of 0000 is set to 0, fix this
+  -add ability to load a new config file
+  -save file to different name if need be
+  -possible backup?
+  -option for encrypting json file itself.
+
+
+"""
+
+
 import os, hashlib
 
 from util import openJSON, writeJSON, clear, strip_input as vInput 
